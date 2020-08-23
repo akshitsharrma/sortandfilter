@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+   <div class="container">
+       <div id="disp">
+
+       </div>
+   </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+  <script>
+    let product=[
+		{"prod":"Pepsi","price":12,"quantity":16,"category":"Food"},
+		{"prod":"Coke","price":15,"quantity":12,"category":"Food"},
+		{"prod":"Mirinda","price":30,"quantity":15,"category":"Food"},
+		{"prod":"Red	Bull","price":80,"quantity":2,"category":"Food"},
+		{"prod":"Lux","price":10,"quantity":11,"category":"Soap"},
+		{"prod":"Dove","price":25,"quantity":4,"category":"Soap"},
+		{"prod":"Dettol","price":15,"quantity":6,"category":"Soap"},
+    {"prod":"Pantene","price":60,"quantity":3,"category":"Shampoo"},
+    {"prod":"Akshit","price":100,"quantity":1,"category":"Programmer"}
+        ]
+    show(product,"");
+    function show(data,selectcat)
+    {
+      var header="<div class='row border bg-dark text-white text-center'><div class='col-3' onclick=cal("+0+")>product</div>"
+      header+="<div class='col-3' onclick=cal("+1+")>Price</div>";
+      header+="<div class='col-3' onclick=cal("+2+")>Quantity</div>";
+      header+="<div class='col-3' onclick=cal("+3+")>Category</div>";
+      header+="</div>"
+      var val= data.map(fun);
+    var sh=val.join("");
+    var select=showCategory(selectcat);
+    var sel="<form><div class='form-group'>"+select+"</div></form>"
+       var ele=document.getElementById("disp");
+       ele.innerHTML=sel+header+sh;
+      // showCategory()
+    }
+    function cal(index)
+    {let copy=[...product]
+        console.log(copy);
+        switch (index)
+        {
+            case 0:copy.sort(sortProd);break;
+            case 1:copy.sort(sortPrice);break;
+            case 2:copy.sort(sortQuantity);break;
+            case 3:copy.sort(sortCategory);break;
+        }
+       show(copy)
+    }
+    function sortProd(p1,p2)
+    {
+        if(p1.prod>p2.prod)
+        {
+            return 1;
+        }
+        if(p2.prod>p1.prod)
+        {
+            return -1;
+        }
+        if(p2.prod==p1.prod)
+        {
+            return 0;
+        }
+    }
+    function sortPrice(p1,p2)
+    {
+        return p1.price-p2.price;
+    }
+    function sortQuantity(p1,p2)
+    {
+        return p1.quantity-p2.quantity;
+    }
+    function sortCategory(p1,p2)
+    {
+        return p1.category-p2.category;
+    }
+   
+    function fun(eval)
+    {
+        var str="<div class='row border bg-light text-center'><div class='col-3'>"+eval.prod+"</div>"
+            str+="<div class='col-3 '>"+eval.price+"</div>";
+            str+="<div class='col-3 '>"+eval.quantity+"</div>";
+            str+="<div class='col-3 '>"+eval.category+"</div>";
+            str+="</div>"
+            return str;
+    }
+    function showCategory(selectcat)
+    {
+       var cat=[];
+       for(var i=0;i<product.length;i++)
+       {
+       let c1=product[i].category;
+       if(cat.indexOf(c1)<0)
+       {
+        cat.push(c1);
+       }
+       }
+     let showOption=cat.map(categ=>({"display":categ,"value":categ}))
+     showOption.unshift({"display":"select category","value":"" })
+     let optMap=showOption.map(opt=>makeElement(opt,selectcat));
+     let showOpt=optMap.join("");
+     let upper="<select id='category'onchange='filter()'class='form-control'>"+showOpt+"</select>";
+    //console.log(upper)
+    return upper;
+    }
+    function filter()
+    {
+      var check=document.getElementById("category").value;
+      let data=product;
+      if(check!="")
+      data=product.filter(el=>el.category===check);
+      show(data,check)
+    }
+    function makeElement(opt,selectcat)
+    {
+      console.log("opt",opt);
+      let chose="";
+      if(opt.value==selectcat) chose="selected";
+      return "<option value='"+opt.value+"'"+chose+">"+opt.display+"</option>"
+    }
+  </script>
+</html>
